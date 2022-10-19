@@ -1,0 +1,39 @@
+{
+  "name": "femundfilou/kirby-render-layouts",
+  "description": "Snippet to use layouts with simple section + column structure.",
+  "version": "0.0.0",
+  "type": "kirby-plugin",
+  "keywords": [
+    "kirby-plugin"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/femundfilou/kirby-render-layouts",
+  "authors": [
+    {
+      "name": "Justus Kraft",
+      "email": "hallo@justuskraft.de"
+    }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
+  },
+  "require": {
+    "php": ">=7.1.0",
+    "getkirby/cms": "^3.6",
+    "getkirby/composer-installer": "^1.1"
+  },
+  "extra": {
+    "installer-name": "render-layouts"
+  },
+  "scripts": {
+    "fix": "php-cs-fixer fix --config .php-cs-fixer.dist.php"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.8"
+  }
+}
