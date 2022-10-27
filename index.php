@@ -1,4 +1,5 @@
 <?php
+
 use Kirby\Cms\App;
 
 App::plugin('femundfilou/render-layouts', [
@@ -10,7 +11,7 @@ App::plugin('femundfilou/render-layouts', [
             'columnsClass' => 'columns',
             'columnClass' => 'column',
             'blockClass' => 'block',
-            'columnWidthClass' => function(int $columnSpan) {
+            'columnWidthClass' => function (int $columnSpan) {
                 return  'is-' . $columnSpan;
             }
         ],
