@@ -1,4 +1,4 @@
-# Kirby render layouts
+# Kirby Render Layouts
 
 This plugin adds a snippet to render layout fields in structured way. By default, it uses [bulma.io](https://bulma.io) classes to do so.
 
@@ -6,83 +6,167 @@ This plugin adds a snippet to render layout fields in structured way. By default
 
 The best way is to install it via composer.
 
-```
+```sh
 composer require femundfilou/kirby-render-layouts
 ```
 
 ## Usage
 
-Whenever you are using a `type: layouts` field in your blueprint, render it using the provided snippet.
+Whenever you are using a `type: layouts` field in your blueprint, you can use the provided snippet to render your field.
 
-```
-<?= snippet('render-layouts', ['field' => $page->myLayoutFieldName()]); ?>
-```
-
-## Possible field settings
-
-You can add some fields to your blueprint layout settings to further modify the rendered result. Each layout can have the following settings fields.
-The best user experience for your panel users may occur when using select options for these fields.
-All of these fields may also be provided as snippet parameters, if you wish to add those classes to all layouts.
-
-| key              |  type  | description                                                                    |
-| :--------------- | :----: | :----------------------------------------------------------------------------- |
-| `padding`        | string | Add a padding class to your **section**.                                       |
-| `background`     | string | Add a background class to your **section**.                                    |
-| `sectionClass`   | string | Add an abitrary class to your **section**.                                     |
-| `containerClass` | string | Add a abitrary class to your **container**.                                    |
-| `columnsClass`   | string | Add a abitrary class to your **columns**.                                      |
-| `navTitle`       | string | Add a `data-Attribute` added to your **section**, used for on page navigation. |
-
-### Example: Add global columnsClass to all layouts
-
-```
-<?= snippet('render-layouts', ['field' => $page->myLayoutFieldName(), 'columnsClass' => 'is-vcentered']); ?>
+```php
+snippet('render-layouts', ['field' => $page->myLayoutFieldName()]);
 ```
 
-## Options
+This will render the following basic markup for each layout you add in the panel.
 
-You can pass on `$options` object to the snippet, to modify it's behavior.
-The following options are available.
-
-| key                       |  type  | default | description                                                                                                   |
-| :------------------------ | :----: | :-----: | :------------------------------------------------------------------------------------------------------------ |
-| `columns`                 | number |  `12`   | number of columns in your grid                                                                                |
-| `additionalColumnClasses` | object |  `[]`   | Add additional column classes based on the columns size. This is useful for responsive classes. (see example) |
-| `classes`                 | object |  `[]`   | Overwrite the default bulma classes with your own. (see example)                                              |
-
-### Example: Add responsive classes
-
-You can pass an object named `additionalColumnClasses` to your `$config` to add additional classes on columns. The object needs to be keyed by the column size, you want this classes to be added.
-
-```
-<?php
-  $config = [
-    "additionalColumnClasses" => [
-      "6" => "is-10-tablet"
-    ]
-  ];
-?>
-<?= snippet('render-layouts', ['field' => $page->myLayoutFieldName(), 'config' => $config]); ?>
-
+```html
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-[fraction]">
+        <div class="block block-type-[myblock]" data-block-type="[myblock]">
+          ...
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 ```
 
-This will add `is-10-tablet` to the `column is-6` element.
+## Configuration
 
-### Example: Overwrite default classes
+You can override the default configuration inside your `config.php` as well as on each snippet itself.
 
-You can pass an object named `classes` to your `$config` to overwrite the default classes used in the snippet with your own. This is useful, if you're planning to use a different grid system than bulma.io.
+### Override in `config.php`
+
+```php
+return [
+  'femundfilou.render-layouts.defaults' => [
+    'columns' => 12, // Defines the max columns count, used to calculate each columns fraction.
+    'sectionClass' => 'section', // Default class used for section
+    'containerClass' => 'container', // Default class used for container
+    'columnsClass' => 'columns', // Default class used for columns
+    'columnClass' => 'column', // Default class used for column
+    'blockClass' => 'block',  // Default class uses for block
+    'columnWidthClass' => function(int $columnSpan) {
+        // Return a string which is used on each indidual column as a width class
+        return  'is-' . $columnSpan;
+    }
+  ],
+];
+```
+
+### Override in snippet
+
+```php
+snippet('render-layouts', ['field' => $page->myLayoutFieldName(), 'columnsClass' => 'grid']);
+```
+
+which will result in the following markup on this page.
+
+```html
+<section class="section">
+  <div class="container">
+    <div class="grid">
+      <div class="column is-[fraction]">
+        <div class="block block-type-[myblock]" data-block-type="[myblock]">
+          ...
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+## Custom attributes & layout settings
+
+To further customize each layout, this plugin provides an easy way to use fields defined as [layout settings](https://getkirby.com/docs/reference/panel/fields/layout#layout-settings).
+
+### Predefined fields
+
+There are three reserved field names you can use to add classes to the different wrappers. Simply use them inside your layout settings fields like this:
+
+```yml
+mylayoutfield:
+  label: Layout
+  type: layout
+  layouts:
+    - "1/1"
+    - "1/2, 1/2"
+  settings:
+    fields:
+      sectionClass:
+        label: Section
+        type: select
+        options:
+          'my-section-class' : 'Example'
+        ...
+      containerClass:
+        ...
+      columnsClass:
+        ...
 
 ```
-<?php
-  $config = [
-    "classes" => [
-      "section" => "my-section",
-      "container" => "my-container",
-      "columns" => "grid",
-      "column" => "grid__cell",
-      "columnPrefix" => "grid__cell--"
-    ]
-  ];
-?>
-<?= snippet('render-layouts', ['field' => $page->myLayoutFieldName(), 'config' => $config]); ?>
+
+### Use your own fields and attributes
+
+Beside the predefined fields, you can use any of your own fields to add **attributes** to the `section`.
+First add the fields to your layout field, e.g.
+
+```yml
+mylayoutfield:
+  label: Layout
+  type: layout
+  layouts:
+    - "1/1"
+    - "1/2, 1/2"
+  settings:
+    fields:
+      spacingclass:
+        label: Spacing
+        type: select
+        options:
+          '' : Default
+          'is-medium': Medium
+          'is-large': Large
+      background:
+        label: Background color
+        type: toggles
+        default: ''
+        options:
+          'transparent' : No background
+          '#000' : Black
+          '#fff' : White
+```
+
+Then define the fields you want to use inside your `config.php`. In the `femundfilou.render-layouts.fields` array define the **attribute** that should be used as key and the field name or a function returning an associative array as value.
+
+```php
+return [
+'femundfilou.render-layouts.fields' => [
+    // Provide an attribute and fieldname
+    'class' => 'spacingclass'
+    // Or use a function to go crazy. You event get access to the current layout.
+    'background' => function($layout) {
+      return ['style' => '--background-color: ' . $layout->background(). ';'];
+    },
+  }
+]
+```
+
+This will result in the following markup.
+
+```html
+<section class="section is-medium" style="--background-color: #000;">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-[fraction]">
+        <div class="block block-type-[myblock]" data-block-type="[myblock]">
+          ...
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 ```
