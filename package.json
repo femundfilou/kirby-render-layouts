@@ -1,6 +1,6 @@
 {
   "name": "kirby-render-layouts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Justus Kraft <hallo@justuskraft.de>",
   "license": "MIT",
   "scripts": {
