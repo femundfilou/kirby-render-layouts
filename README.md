@@ -140,15 +140,16 @@ mylayoutfield:
           '#fff' : White
 ```
 
-Then define the fields you want to use inside your `config.php`. In the `femundfilou.render-layouts.fields` array define the **attribute** that should be used as key and the field name or a function returning an associative array as value.
+Then define the fields you want to use inside your `config.php`. In the `femundfilou.render-layouts.fields` array define the **field name** that should be used as key and the **attribute** or a function returning an associative array as value.
 
 ```php
 return [
 'femundfilou.render-layouts.fields' => [
-    // Provide an attribute and fieldname
-    'class' => 'spacingclass'
+    // Provide an field name and attribute
+    'spacingclass' => 'class'
     // Or use a function to go crazy. You event get access to the current layout.
     'background' => function($layout) {
+      // Return attribute and value
       return ['style' => '--background-color: ' . $layout->background(). ';'];
     },
   }
