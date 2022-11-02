@@ -22,7 +22,7 @@ if($fields = option('femundfilou.render-layouts.fields')) {
 $attributes = A::map(A::extend(
     $customAttributes,
     ['class' => $options['sectionClass']],
-    ['class' => $layout->sectionClass()->isNotEmpty() ? $layout->sectionClass() : '']
+    ['class' => $layout->sectionClass()->isNotEmpty() ? $layout->sectionClass()->value() : '']
 ), fn ($item) => is_array($item) ? Str::trim(A::join($item, ' ')) : $item);
 ?>
 <section <?= attr($attributes)?> id="<?= $layout->id() ?>">
