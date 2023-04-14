@@ -14,7 +14,7 @@ if($fields = option('femundfilou.render-layouts.fields')) {
             }
             $customAttributes = A::extend($customAttributes, $userfield);
         } else {
-            $customAttributes[$value] = $layout->$key()->value();
+            $customAttributes = A::extend($customAttributes, [$value => $layout->$key()->value()]);
         }
     }
 }
