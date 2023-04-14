@@ -1,5 +1,12 @@
 
 
+### [1.0.2](https://github.com/femundfilou/kirby-render-layouts/compare/v1.0.1...v1.0.2) (2023-04-14)
+
+
+### Bug Fixes
+
+* Allow multiple identical tags in custom attributes ([fd03f82](https://github.com/femundfilou/kirby-render-layouts/commit/fd03f82418fb9e730f21dfd1ce35ce90faf90918))
+
 ### [1.0.1](https://github.com/femundfilou/kirby-render-layouts/compare/v1.0.0...v1.0.1) (2022-11-02)
 
 
